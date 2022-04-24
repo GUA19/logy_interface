@@ -1,122 +1,117 @@
 <template>
-
-  		<n-config-provider :theme="theme">
-		
+	<n-config-provider :theme="theme">
 		<n-card class="body">
-		<n-space>
-			<n-switch 
-				v-model:value="active" 
-				size="large" 
-				@click="theme == null ? (theme = darkTheme) : (theme = null);">
-				<template #checked-icon>
-					<n-icon :component="DarkModeOutlined" />
-				</template>
-				<template #unchecked-icon>
-					<n-icon :component="LightModeOutlined" />
-				</template>
-			</n-switch>
-			<n-divider vertical />
-			<n-button @click="redirect()" size="small">
-				Return
-			</n-button>
-		</n-space>
-		<n-grid :cols="2" :x-gap="0">
-			<n-gi>
-				<br>
-				<br>
-				<br>
-				<img v-if="theme == null" src="./assets/hashwave_light_transparent.png" alt="Vue logo" height="125">
-				<img v-else src="./assets/hashwave_dark_transparent.png" alt="Vue logo" height="125">
-			</n-gi>
-			<n-gi>
-				<n-form
-					
-					:model="formValue" 
-					label-placement="left"
-					require-mark-placement="right-hanging"
-					label-width="auto"
-					:style="{
-						maxWidth: '600px'
-					}"
-				>
-					<n-form-item label="Application" path="application">
-					<n-select
-						@update:value="handleApplication"
-						v-model:value="formValue.application"
-						:options="applicationOptions"
-						clearable
-					/>
-					</n-form-item>
-					<n-form-item label="Component" path="component">
+			<n-space>
+				<n-switch 
+					v-model:value="active" 
+					size="large" 
+					@click="theme == null ? (theme = darkTheme) : (theme = null);">
+					<template #checked-icon>
+						<n-icon :component="DarkModeOutlined" />
+					</template>
+					<template #unchecked-icon>
+						<n-icon :component="LightModeOutlined" />
+					</template>
+				</n-switch>
+				<n-divider vertical />
+				<n-button @click="redirect()" size="small">
+					Return
+				</n-button>
+			</n-space>
+			<n-grid :cols="2" :x-gap="0">
+				<n-gi>
+					<br>
+					<br>
+					<br>
+					<img v-if="theme == null" src="./assets/hashwave_light_transparent.png" alt="Vue logo" height="125">
+					<img v-else src="./assets/hashwave_dark_transparent.png" alt="Vue logo" height="125">
+				</n-gi>
+				<n-gi>
+					<n-form
+						:model="formValue" 
+						label-placement="left"
+						require-mark-placement="right-hanging"
+						label-width="auto"
+						:style="{
+							maxWidth: '600px'
+						}"
+					>
+						<n-form-item label="Application" path="application">
 						<n-select
-							@update:value="handleComponent"
-							v-model:value="formValue.component"
-							:options="componentOptions"
+							@update:value="handleApplication"
+							v-model:value="formValue.application"
+							:options="applicationOptions"
 							clearable
 						/>
-					</n-form-item>
-					<n-form-item label="Instance" path="instance">
-						<n-select
-							@update:value="handleInstance"
-							v-model:value="formValue.instance"
-							:options="instanceOptions"
-							clearable
-						/>
-					</n-form-item>
-					<n-form-item label="IP" path="ip">
-						<n-select
-							v-model:value="formValue.ip"
-							:options="ipOptions"
-							clearable
-						/>
-					</n-form-item>
-					<n-form-item label="Level" path="level">
-						<n-select
-							v-model:value="formValue.level"
-							:options="levelOptions"
-							clearable
-						/>
-					</n-form-item>
-					<n-form-item label="Limit" path="limit">
-						<n-input-number
-							:style="{ width: '600px' }"
-							v-model:value="formValue.limit"
-						/>
-					</n-form-item>
-					<n-form-item label="Timestamp">
-						<n-grid :cols="2" :x-gap="20">
-							<n-form-item-gi path="timestamp.start">
-							<n-input-group-label>From</n-input-group-label>
-							<n-date-picker
-								v-model:value="formValue.timestamp.start"
-								type="datetime"
+						</n-form-item>
+						<n-form-item label="Component" path="component">
+							<n-select
+								@update:value="handleComponent"
+								v-model:value="formValue.component"
+								:options="componentOptions"
 								clearable
 							/>
-							</n-form-item-gi>
-							<n-form-item-gi path="timestamp.start">
-							<n-input-group-label>To</n-input-group-label>
+						</n-form-item>
+						<n-form-item label="Instance" path="instance">
+							<n-select
+								@update:value="handleInstance"
+								v-model:value="formValue.instance"
+								:options="instanceOptions"
+								clearable
+							/>
+						</n-form-item>
+						<n-form-item label="IP" path="ip">
+							<n-select
+								v-model:value="formValue.ip"
+								:options="ipOptions"
+								clearable
+							/>
+						</n-form-item>
+						<n-form-item label="Level" path="level">
+							<n-select
+								v-model:value="formValue.level"
+								:options="levelOptions"
+								clearable
+							/>
+						</n-form-item>
+						<n-form-item label="Limit" path="limit">
+							<n-input-number
+								:style="{ width: '600px' }"
+								v-model:value="formValue.limit"
+							/>
+						</n-form-item>
+						<n-form-item label="Timestamp">
+							<n-grid :cols="2" :x-gap="20">
+								<n-form-item-gi path="timestamp.start">
+								<n-input-group-label>From</n-input-group-label>
 								<n-date-picker
-									v-model:value="formValue.timestamp.end"
+									v-model:value="formValue.timestamp.start"
 									type="datetime"
 									clearable
 								/>
-							</n-form-item-gi>
-						</n-grid>
-					</n-form-item>
-				</n-form>
-				<n-button @click="queryLogy(formValue)">
-					QUERY
-				</n-button>
-			</n-gi>
-			<n-gi>
+								</n-form-item-gi>
+								<n-form-item-gi path="timestamp.start">
+								<n-input-group-label>To</n-input-group-label>
+									<n-date-picker
+										v-model:value="formValue.timestamp.end"
+										type="datetime"
+										clearable
+									/>
+								</n-form-item-gi>
+							</n-grid>
+						</n-form-item>
+					</n-form>
+					<n-button @click="queryLogy(formValue)">
+						QUERY
+					</n-button>
+				</n-gi>
+				<n-gi>
 
-			</n-gi>
-		</n-grid>
-		<router-view :recordsData="recordsData" :rpdData="rpdData" :swirlData="swirlData"></router-view>
+				</n-gi>
+			</n-grid>
+			<router-view :recordsData="recordsData" :rpdData="rpdData" :swirlData="swirlData"></router-view>
 		</n-card>
-	
-  		</n-config-provider>
-
+	</n-config-provider>
 </template>
 
 <script setup lang="ts">
@@ -137,8 +132,8 @@
 	let active = ref(true)
 	// form
 	let formValue = reactive({
-		application: <null | string>(null),
-		component: <null | string>(null),
+		application: <any>(null),
+		component: <any>(null),
 		instance: <null | string>(null),
 		ip: <null | string>(null),
 		level: <null | string>(null),
