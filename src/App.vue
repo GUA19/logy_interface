@@ -221,9 +221,9 @@
 
 	const handleApplication = (value: string) => {
 		if (value != null) {
-			// router.push({
-			// 	name: value,
-			// });
+			router.push({
+				name: value,
+			});
 			componentOptions.length = 0;
 			if (value != 'records') {
 				componentOptions.push(...options[value]['option'])
@@ -272,6 +272,19 @@
 	const queryLogy = async (formValue:any) => {
 		let name = new Array()
 		name[0] = formValue.application
+		switch (formValue.application) {
+			case "records":
+				recordsData.length = 0
+				break;
+			case "swirl":
+				swirlData.length = 0
+				break;
+			case "rpd":
+				rpdData.length = 0
+				break;
+			default:
+				break;
+		}
 		let level = formValue.level
 		let limit = formValue.limit
 		let start = formValue.timestamp.start
@@ -336,68 +349,64 @@
 			end = Date.now()
 		}
 		console.log(name, level, limit, start, end)
-		try {
-			let res = await GetAPI.getCollection(name, level, limit, start, end)
-			console.log(res)
-			if (res == null) {
-				console.log('No document found match the query data!')
-				return
-			}
-			switch ( formValue.application ) {
-				case 'records':
-					recordsData.length = 0
-					for (let i of res) {
-						delete i._id
-						delete i.collection
-						if (i.success) {
-							i.success = 1
-						} else {
-							i.success = 0
+		for (let n of name) {
+			try {
+				let res = await GetAPI.getCollection(n, level, limit, start, end)
+				console.log(res)
+				if (res == null) {
+					console.log('No document found match the query data!', n)
+					continue
+				}
+				switch ( formValue.application ) {
+					case 'records':
+						for (let i of res) {
+							delete i._id
+							if (i.success) {
+								i.success = 1
+							} else {
+								i.success = 0
+							}
+							i.ts = new Date(parseInt(i.ts.toString().slice(0,-6))).toISOString().replace('T', ' ').replace('Z', '') + ':' + i.ts.toString().slice(-6,),
+							recordsData.push(i)
 						}
-						i.ts = new Date(parseInt(i.ts.toString().slice(0,-6))).toISOString().replace('T', ' ').replace('Z', '') + ':' + i.ts.toString().slice(-6,),
-						recordsData.push(i)
-					}
-					break;
-				case 'swirl':
-					swirlData.length = 0
-					for (let i of res) {
-						let dic = <any>{}
-						dic.collection = i.collection
-						dic.level = i.level
-						dic.timestamp = new Date(parseInt(i.ts.toString().slice(0,-6))).toISOString().replace('T', ' ').replace('Z', '') + ':' + i.ts.toString().slice(-6,),
-						dic.message = i.msg
-						delete i._id
-						delete i.level
-						delete i.ts
-						delete i.msg
-						delete i.collection
-						dic.obj = JSON.stringify(i)
-						swirlData.push(dic)
-					}
-					break;
-				case 'rpd':
-					rpdData.length = 0
-					for (let i of res) {
-						let dic = <any>{}
-						dic.collection = i.collection
-						dic.level = i.level
-						dic.timestamp = new Date(parseInt(i.ts.toString().slice(0,-6))).toISOString().replace('T', ' ').replace('Z', '') + ':' + i.ts.toString().slice(-6,),
-						dic.message = i.msg
-						delete i._id
-						delete i.level
-						delete i.ts
-						delete i.msg
-						delete i.collection
-						dic.obj = JSON.stringify(i)
-						rpdData.push(dic)
-					}
-					break;
-				default:
-					console.log('wrong collection name!')
-					break;
-			}	
-		} catch (error) {
-			console.log(error)
+						break;
+					case 'swirl':
+						for (let i of res) {
+							let dic = <any>{}
+							dic.collection = n
+							dic.level = i.level
+							dic.timestamp = new Date(parseInt(i.ts.toString().slice(0,-6))).toISOString().replace('T', ' ').replace('Z', '') + ':' + i.ts.toString().slice(-6,),
+							dic.message = i.msg
+							delete i._id
+							delete i.level
+							delete i.ts
+							delete i.msg
+							dic.obj = JSON.stringify(i)
+							swirlData.push(dic)
+						}
+						break;
+					case 'rpd':
+						for (let i of res) {
+							let dic = <any>{}
+							dic.collection = n
+							dic.level = i.level
+							dic.timestamp = new Date(parseInt(i.ts.toString().slice(0,-6))).toISOString().replace('T', ' ').replace('Z', '') + ':' + i.ts.toString().slice(-6,),
+							dic.message = i.msg
+							delete i._id
+							delete i.level
+							delete i.ts
+							delete i.msg
+							dic.obj = JSON.stringify(i)
+							rpdData.push(dic)
+						}
+						break;
+					default:
+						console.log('wrong collection name!')
+						break;
+				}	
+			} catch (error) {
+				console.log(error)
+			}
 		}
 	}
 

@@ -17,7 +17,7 @@ class GetAPI {
         });
     }
 
-    static async getCollection(name: Array<string>, level: string, limit: number, start: number, end: number) :Promise<Array<any>> {
+    static async getCollection(name: string, level: string, limit: number, start: number, end: number) :Promise<Array<any>> {
         return new Promise(
             (resolve, reject) => {
                 axios.get(url + 'collections', {
