@@ -1,0 +1,56 @@
+import axios from "axios";
+const url = 'https://logy.hashwave.io/api/';
+
+class GetAPI {
+    static async getAllCollectionNames() {
+        return new Promise((resolve, reject) => {
+            axios.get(url + 'list')
+            .then((res) => {
+                let data = res.data;
+                resolve(
+                    data
+                );
+            })
+            .catch((err) => {
+                reject(err);
+            })
+        });
+    }
+
+    static async getCollection(name: Array<string>, level: string, limit: number, start: number, end: number) {
+        return new Promise((resolve, reject) => {
+            axios.get(url + 'collections', {
+                params: {
+                    name: name,
+                    level: level,
+                    limit: limit.toString(),
+                    start: start.toString(),
+                    end: end.toString(),
+                }
+            })
+            .then((res) => {
+                let data = res.data;
+                resolve(
+                    data
+                );
+            })
+            .catch((err) => {
+                reject(err);
+            })
+        });
+    }
+
+    // static async postTemplate(dic: any) {
+    //     axios.post(url + 'template/new', {
+    //         data: dic,
+    //     })
+    //     .then(function (response) {
+    //         console.log(response);
+    //     })
+    //     .catch(function (error) {
+    //         console.log(error);
+    //     });
+    // }
+}
+
+export default GetAPI;

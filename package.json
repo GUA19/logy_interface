@@ -8,6 +8,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@babel/types": "^7.17.0",
+    "axios": "^0.26.1",
     "vue": "^3.2.25",
     "vue-router": "^4.0.14"
   },

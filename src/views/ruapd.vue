@@ -1,44 +1,36 @@
 <template>
   <div class="ruapd">
     <h2>Ruapd Raw Data</h2>
-    <n-data-table :columns="columns" :data="data" />
-    <h2>Ruapd Processed Data</h2>
-    <n-data-table :columns="columns" :data="data" />
+    <n-data-table 
+      :columns="columns" 
+      :data="rpdData" 
+      :pagination="pagination"
+    />
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from 'vue';
+<script setup lang="ts">
 
 type header = {
   title: string;
   key: string;
 };
 
-type tableItem = {
-  name: string;
-  age: number;
-  address: string;
-  tags: string;
-  actions: string;
-};
-
 const columns: Array<header> = [
-  { title: 'Name', key: 'name' },
-  { title: 'Age', key: 'age' },
-  { title: 'Address', key: 'address' },
-  { title: 'Tags', key: 'tags' },
-  { title: 'Action', key: 'actions' },
+  { title: 'Collection', key: 'collection' },
+  { title: 'Level', key: 'level' },
+  { title: 'Timestamp', key: 'timestamp' },
+  { title: 'Message', key: 'message' },
+  { title: 'Object', key: 'obj' },
 ];
 
-let data: Array<tableItem> = [];
+const pagination = {
+  pageSize: 30
+}
 
-export default defineComponent({
-  data() {
-    return {
-      data: ref(data),
-      columns,
-    };
-  },
-});
+type Props = {
+  rpdData: [],
+}
+
+defineProps<Props>()
 </script>
