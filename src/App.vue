@@ -100,10 +100,10 @@
 								</n-form-item-gi>
 							</n-grid>
 						</n-form-item>
+						<n-button @click="queryLogy(formValue)">
+							QUERY
+						</n-button>
 					</n-form>
-					<n-button @click="queryLogy(formValue)">
-						QUERY
-					</n-button>
 				</n-gi>
 				<n-gi>
 
@@ -366,7 +366,7 @@
 							} else {
 								i.success = 0
 							}
-							i.ts = new Date(parseInt(i.ts.toString().slice(0,-6))).toISOString().replace('T', ' ').replace('Z', '') + ':' + i.ts.toString().slice(-6,),
+							// i.ts = new Date(parseInt(i.ts.toString().slice(0,-6))).toISOString().replace('T', ' ').replace('Z', '') + ':' + i.ts.toString().slice(-6,),
 							recordsData.push(i)
 						}
 						break;
@@ -375,7 +375,8 @@
 							let dic = <any>{}
 							dic.collection = n
 							dic.level = i.level
-							dic.timestamp = new Date(parseInt(i.ts.toString().slice(0,-6))).toISOString().replace('T', ' ').replace('Z', '') + ':' + i.ts.toString().slice(-6,),
+							dic.timestamp = i.ts
+							// dic.timestamp = new Date(parseInt(i.ts.toString().slice(0,-6))).toISOString().replace('T', ' ').replace('Z', '') + ':' + i.ts.toString().slice(-6,),
 							dic.message = i.msg
 							delete i._id
 							delete i.level
@@ -390,7 +391,8 @@
 							let dic = <any>{}
 							dic.collection = n
 							dic.level = i.level
-							dic.timestamp = new Date(parseInt(i.ts.toString().slice(0,-6))).toISOString().replace('T', ' ').replace('Z', '') + ':' + i.ts.toString().slice(-6,),
+							dic.timestamp = i.ts
+							// dic.timestamp = new Date(parseInt(i.ts.toString().slice(0,-6))).toISOString().replace('T', ' ').replace('Z', '') + ':' + i.ts.toString().slice(-6,),
 							dic.message = i.msg
 							delete i._id
 							delete i.level
