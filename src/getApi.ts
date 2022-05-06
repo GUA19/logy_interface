@@ -1,4 +1,5 @@
 import axios from "axios";
+// const url = 'http://localhost:5004/'
 const url = 'https://logy.hashwave.io/api/';
 
 class GetAPI {
@@ -38,6 +39,30 @@ class GetAPI {
                 .catch((err) => {
                     reject(err);
                 })
+            }
+        );
+    }
+
+    static async getLogs(name: string, query: string, sort: string, limit: number) :Promise<Array<any>> {
+        return new Promise(
+            (resolve, reject) => {
+                axios.get(url + 'logs', {
+                    params: {
+                        name: name,
+                        query: query,
+                        sort: sort,
+                        limit: limit.toString(),
+                    }
+                })
+                    .then((res) => {
+                        let data = res.data;
+                        resolve(
+                            data
+                        );
+                    })
+                    .catch((err) => {
+                        reject(err);
+                    })
             }
         );
     }

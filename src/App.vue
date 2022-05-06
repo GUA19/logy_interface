@@ -67,46 +67,36 @@
 								clearable
 							/>
 						</n-form-item>
-						<n-form-item label="Level" path="level">
-							<n-select
-								v-model:value="formValue.level"
-								:options="levelOptions"
-								clearable
-							/>
-						</n-form-item>
 						<n-form-item label="Limit" path="limit">
 							<n-input-number
 								:style="{ width: '600px' }"
 								v-model:value="formValue.limit"
 							/>
 						</n-form-item>
-						<n-form-item label="Timestamp">
-							<n-grid :cols="2" :x-gap="20">
-								<n-form-item-gi path="timestamp.start">
-								<n-input-group-label>From</n-input-group-label>
-								<n-date-picker
-									v-model:value="formValue.timestamp.start"
-									type="datetime"
-									clearable
-								/>
-								</n-form-item-gi>
-								<n-form-item-gi path="timestamp.start">
-								<n-input-group-label>To</n-input-group-label>
-									<n-date-picker
-										v-model:value="formValue.timestamp.end"
-										type="datetime"
-										clearable
-									/>
-								</n-form-item-gi>
-							</n-grid>
+						<n-form-item label="Query" path="query">
+							<n-dynamic-input
+								v-model:value="formValue.query"
+								placeholder="Please type query here"
+								:min="1"
+								:max="100"
+							/>
+						</n-form-item>
+						<n-form-item label="Sort" path="sort">
+							<n-dynamic-input
+								v-model:value="formValue.sort"
+								placeholder="Please type sort here"
+								:min="1"
+								:max="100"
+							/>
 						</n-form-item>
 						<n-button @click="queryLogy(formValue)">
 							QUERY
 						</n-button>
 					</n-form>
 				</n-gi>
+				
 				<n-gi>
-
+					
 				</n-gi>
 			</n-grid>
 			<router-view :recordsData="recordsData" :rpdData="rpdData" :swirlData="swirlData"></router-view>
@@ -136,23 +126,15 @@
 		component: <any>(null),
 		instance: <null | string>(null),
 		ip: <null | string>(null),
-		level: <null | string>(null),
 		limit: <null | number>(null),
-		timestamp: {
-			start: <null | number>(null),
-			end: <null | number>(null),
-		}
+		query: ref(['']),
+		sort: ref([''])
 	})
 	let options = reactive<any>({})
 	let applicationOptions: Array<option> = reactive([]);
 	let componentOptions: Array<option> = reactive([]);
 	let instanceOptions: Array<option> = reactive([]);
 	let ipOptions: Array<option> = reactive([]);
-	let levelOptions: Array<option> = [
-		{ label: 'info', value: 'info', },
-		{ label: 'warn', value: 'warn', },
-		{ label: 'error', value: 'error', },
-	];
 	// data table
 	let recordsData:Array<any> = reactive([])
 	let rpdData:Array<any> = reactive([])
@@ -285,10 +267,30 @@
 			default:
 				break;
 		}
-		let level = formValue.level
 		let limit = formValue.limit
-		let start = formValue.timestamp.start
-		let end = formValue.timestamp.end
+		let query = <any>{}
+		let sort = <any>{}
+		try {
+			for (let i of formValue.query) {
+				if (i != "" && i != "{}") {
+					let obj = JSON.parse(i)
+					for (let key in obj) {
+						query[key] = obj[key]
+					}
+				}
+			}
+			for (let j of formValue.sort) {
+				if (formValue.sort != "" && formValue.sort != "{}") {
+					let obj = JSON.parse(j)
+					for (let key in obj) {
+						sort[key] = obj[key]
+					}
+				}
+			}
+		} catch (error) {
+			console.log("Please check your input")
+			return
+		}
 		if (formValue.application != 'records') {
 			if (formValue.component != null) {
 				name[0] = name[0] + '_' + formValue.component
@@ -336,22 +338,13 @@
 				name = arr
 			}
 		}
-		if (!level) {
-			level = 'info'
-		}
 		if (!limit || limit < 0) {
 			limit = 500
 		}
-		if (!start || start > Date.now()) {
-			start = Date.now() - 5 * 24 * 60 * 60 * 1000
-		}
-		if (!end) {
-			end = Date.now()
-		}
-		console.log(name, level, limit, start, end)
+		console.log(name, limit, JSON.stringify(query), JSON.stringify(sort))
 		for (let n of name) {
 			try {
-				let res = await GetAPI.getCollection(n, level, limit, start, end)
+				let res = await GetAPI.getLogs(n, JSON.stringify(query), JSON.stringify(sort), limit)
 				console.log(res)
 				if (res == null) {
 					console.log('No document found match the query data!', n)
