@@ -39,26 +39,42 @@ let formValue = reactive({
 
 let queryPresetOptions = [
     {
-        label: 'info',
+        label: 'Info',
         value: '{"level":"info"}',
     },
     {
-        label: 'warn',
+        label: 'Warn',
         value: '{"level":"warn"}',
     },
     {
-        label: 'error',
+        label: 'Error',
         value: '{"level":"error"}',
-    }
+    },
+    {
+        label: 'Last 1 hour',
+        value: `{"ts":{"$gte":${(Date.now() - 1000 * 60 * 60).toString()}000000}}`,
+    },
+    {
+        label: 'Last 6 hours',
+        value: `{"ts":{"$gte":${(Date.now() - 1000 * 60 * 60 * 6).toString()}000000}}`,
+    },
+    {
+        label: 'Last 12 hours',
+        value: `{"ts":{"$gte":${(Date.now() - 1000 * 60 * 60 * 12).toString()}000000}}`,
+    },
+    {
+        label: 'Last 24 hours',
+        value: `{"ts":{"$gte":${(Date.now() - 1000 * 60 * 60 * 24).toString()}000000}}`,
+    },
 ]
 
 let sortPresetOptions = [
     {
-        label: 'tsDesc',
+        label: 'tsDescending',
         value: '{"ts":-1}',
     },
     {
-        label: 'tsAsc',
+        label: 'tsAscending',
         value: '{"ts":1}',
     },
 ]
@@ -283,7 +299,7 @@ async function queryLogy(formValue: any) {
         }
     }
     disableQueryButton.value = false
-    if (logydata.length == 0 ) {
+    if (logydata.length == 0) {
         loadingBar.error()
         message.error('No document found match the query data!')
         return
@@ -324,17 +340,17 @@ async function queryLogy(formValue: any) {
                 <n-dynamic-input v-model:value="formValue.sort" placeholder="Please type sort here" :min="0"
                     :max="10" />
             </n-form-item-gi>
-            <n-form-item-gi span="12" label="Query Preset" path="queryPreset">
+            <n-form-item-gi span="12" label="Query Presets" path="queryPreset">
                 <n-transfer v-model:value="formValue.queryPreset" size="small" source-title=" " target-title=" "
                     :options="queryPresetOptions" />
             </n-form-item-gi>
-            <n-form-item-gi span="12" label="Sort Preset" path="sortPreset">
+            <n-form-item-gi span="12" label="Sort Presets" path="sortPreset">
                 <n-transfer v-model:value="formValue.sortPreset" size="small" source-title=" " target-title=" "
                     :options="sortPresetOptions" />
             </n-form-item-gi>
         </n-grid>
         <n-form-item label="Limit" path="limit">
-            <n-input-number v-model:value="formValue.limit" />
+            <n-input-number v-model:value="formValue.limit" placeholder="500" />
         </n-form-item>
         <n-button @click="queryLogy(formValue)" :disabled="disableQueryButton">
             QUERY

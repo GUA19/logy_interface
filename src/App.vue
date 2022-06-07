@@ -92,12 +92,15 @@ function getOptionsDict(list: Array<String>) {
 function handleQueryEvent(data: any) {
 	switch (data.application) {
 		case 'records':
+			recordsData.length = 0
 			recordsData.push(...data.data)
 			break;
 		case 'swirl':
+			swirlData.length = 0
 			swirlData.push(...data.data)
 			break;
 		case 'rpd':
+			rpdData.length = 0
 			rpdData.push(...data.data)
 			break;
 		default:
