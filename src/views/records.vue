@@ -1,28 +1,14 @@
-<template>
-  <div class="records">
-    <h2>Records Raw Data</h2>
-    <n-data-table 
-      striped
-      :columns="columns" 
-      :data="recordsData" 
-      :pagination="pagination"
-      :style="{ height: `${1226}px` }"
-      flex-height
-    />
-  </div>
-</template>
-
 <script setup lang="ts">
 
 const columns: Array<any> = [
-  { title: 'Collection Name', key: 'coll_name', width: 286  },
-  { 
-    title: 'Timestamp', 
+  { title: 'Collection Name', key: 'coll_name', width: 286 },
+  {
+    title: 'Timestamp',
     key: 'ts',
-    width: 232, 
-    sorter: (row1: { timestamp: number; }, row2: { timestamp: number; }) => row1.timestamp - row2.timestamp, 
+    width: 232,
+    sorter: (row1: { timestamp: number; }, row2: { timestamp: number; }) => row1.timestamp - row2.timestamp,
     render(row: { ts: number }) {
-      return new Date(parseInt(row.ts.toString().slice(0,-6))).toISOString().replace('T', ' ').replace('Z', '') + ':' + row.ts.toString().slice(-6,)
+      return new Date(parseInt(row.ts.toString().slice(0, -6))).toISOString().replace('T', ' ').replace('Z', '') + ':' + row.ts.toString().slice(-6,)
     },
   },
   { title: 'Submit Type', key: 'submit_type', width: 102 },
@@ -41,3 +27,10 @@ type Props = {
 
 defineProps<Props>()
 </script>
+
+<template>
+  <div class="records">
+    <n-data-table striped :columns="columns" :data="recordsData" :pagination="pagination"
+      :style="{ 'height': '1226px' }" flex-height />
+  </div>
+</template>
