@@ -39,15 +39,27 @@ let formValue = reactive({
 
 let queryPresetOptions = [
     {
-        label: 'Info',
+        label: 'Info & Warn & Error',
+        value: '{}',
+    },
+    {
+        label: 'Info Only',
         value: '{"level":"info"}',
     },
     {
-        label: 'Warn',
+        label: 'Warn & Error',
+        value: '{"$or": [{"level":"warn"},{"level":"error"}]}',
+    },
+    {
+        label: 'Warn Only',
         value: '{"level":"warn"}',
     },
     {
         label: 'Error',
+        value: '{"level":"error"}',
+    },
+    {
+        label: 'Error Only',
         value: '{"level":"error"}',
     },
     {
