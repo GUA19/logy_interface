@@ -27,7 +27,7 @@ let rpdData: Array<any> = reactive([])
 let swirlData: Array<any> = reactive([])
 
 function redirect() {
-	window.location.href = 'https://wavefront.hashwave.io/dashboard';
+	window.location.href = 'https://wavefront.codehard.xyz';
 }
 
 function getOptionsDict(list: Array<String>) {

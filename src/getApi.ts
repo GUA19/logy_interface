@@ -1,6 +1,6 @@
 import axios from "axios";
 // const url = 'http://localhost:5004/'
-const url = 'https://logy.hashwave.io/api/';
+const url = 'https://logy.codehard.xyz/api/';
 
 class GetAPI {
     static async getAllCollectionNames(): Promise<Array<any>> {
