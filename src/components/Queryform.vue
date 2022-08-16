@@ -26,11 +26,11 @@ let ipOptions: Array<option> = reactive([]);
 let disableQueryButton = ref(false);
 
 let formValue = reactive({
-    application: <any>(null),
-    component: <any>(null),
-    instance: <null | string>(null),
-    ip: <null | string>(null),
-    limit: <null | number>(null),
+    application: null as any,
+    component: null as any,
+    instance: null as null | string,
+    ip: null as null | string,
+    limit: null as null | number,
     query: ref([]),
     sort: ref([]),
     queryPreset: ref([]),
@@ -156,8 +156,8 @@ async function queryLogy(formValue: any) {
     name[0] = formValue.application
     logydata.length = 0
     let limit = formValue.limit
-    let query = <any>{}
-    let sort = <any>{}
+    let query = {} as any
+    let sort = {} as any
     try {
         for (let i of formValue.query) {
             if (i != "" && i != "{}") {
@@ -272,7 +272,7 @@ async function queryLogy(formValue: any) {
                     break;
                 case 'swirl':
                     for (let i of res) {
-                        let dic = <any>{}
+                        let dic = {} as any
                         dic.collection = n
                         dic.level = i.level
                         dic.timestamp = i.ts
@@ -288,7 +288,7 @@ async function queryLogy(formValue: any) {
                     break;
                 case 'rpd':
                     for (let i of res) {
-                        let dic = <any>{}
+                        let dic = {} as any
                         dic.collection = n
                         dic.level = i.level
                         dic.timestamp = i.ts
