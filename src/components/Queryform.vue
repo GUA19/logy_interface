@@ -30,18 +30,16 @@ let formValue = reactive({
     component: null as any,
     instance: null as null | string,
     ip: null as null | string,
+    query: ref([] as string[]),
+    sort: ref([] as string[]),
+    queryPreset: ref([] as string[]),
+    sortPreset: ref([] as string[]),
+    range: ref(null as number[] | null),
+    // range: ref([Date.now() - 1 * 60 * 60 * 1000, Date.now()]),
     limit: null as null | number,
-    query: ref([]),
-    sort: ref([]),
-    queryPreset: ref([]),
-    sortPreset: ref([]),
 })
 
 let queryPresetOptions = [
-    {
-        label: 'Info & Warn & Error',
-        value: '{}',
-    },
     {
         label: 'Info Only',
         value: '{"level":"info"}',
@@ -175,6 +173,12 @@ async function queryLogy(formValue: any) {
                 }
             }
         }
+        if (formValue.range != null) {
+            query['ts'] = {
+                '$gte': parseFloat(formValue.range[0].toString() +'000000'),
+                '$lte': parseFloat(formValue.range[1].toString() + '000000'),
+            }
+        }
         for (let k of formValue.sort) {
             if (k != "" && k != "{}") {
                 let obj = JSON.parse(k)
@@ -248,11 +252,12 @@ async function queryLogy(formValue: any) {
     if (!limit || limit < 0) {
         limit = 500
     }
-    console.log(name, limit, JSON.stringify(query), JSON.stringify(sort))
+    // console.log(name, limit, JSON.stringify(query), JSON.stringify(sort))
     for (let n of name) {
         try {
+            // let res: any[] = []
             let res = await GetAPI.getLogs(n, JSON.stringify(query), JSON.stringify(sort), limit)
-            console.log(res)
+            // console.log(res)
             if (res == null) {
                 console.log('No document found match the query data!', n)
                 continue
@@ -360,12 +365,17 @@ async function queryLogy(formValue: any) {
                 <n-transfer v-model:value="formValue.sortPreset" size="small" source-title=" " target-title=" "
                     :options="sortPresetOptions" />
             </n-form-item-gi>
+            <n-form-item-gi span="12" label="Time Picker" path="timePicker">
+                <n-date-picker class="mt-3" size="small" clearable v-model:value="formValue.range" type="datetimerange"
+                    style="width: 100%" />
+            </n-form-item-gi>
+            <n-form-item-gi span="12" label="Limit" path="limit">
+                <n-input-number v-model:value="formValue.limit" placeholder="500" />
+            </n-form-item-gi>
         </n-grid>
-        <n-form-item label="Limit" path="limit">
-            <n-input-number v-model:value="formValue.limit" placeholder="500" />
-        </n-form-item>
         <n-button @click="queryLogy(formValue)" :disabled="disableQueryButton">
             QUERY
         </n-button>
+        {{ formValue.range }}
     </n-form>
 </template>
