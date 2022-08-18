@@ -1,16 +1,15 @@
-<script setup lang="ts">
-import GetAPI from './getApi'
-import QueryForm from './components/Queryform.vue'
-import { reactive, ref, onBeforeMount } from 'vue'
+<script lang="ts" setup>
+import { reactive, ref, onBeforeMount } from 'vue';
+import { darkTheme, NConfigProvider, NCard, NPageHeader, NDivider, NSpace, NSwitch, NButton, NIcon, NLoadingBarProvider, NMessageProvider } from 'naive-ui';
 import { useRouter } from 'vue-router';
-import { darkTheme } from 'naive-ui';
-import { LightModeOutlined, DarkModeOutlined } from '@vicons/material'
+import { LightModeOutlined, DarkModeOutlined } from '@vicons/material';
+import GetAPI from './getApi';
+import QueryForm from './components/Queryform.vue';
 
 type option = {
 	label: string,
 	value: string,
 };
-
 
 const router = useRouter();
 // switch
@@ -174,6 +173,4 @@ onBeforeMount(async () => {
 	margin-bottom: 0px;
 	background-color: coral;
 }
-
-;
 </style>

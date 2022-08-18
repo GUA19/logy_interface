@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { useLoadingBar, useMessage } from 'naive-ui';
 import { reactive, ref } from 'vue';
+import { NForm, NFormItem, NSelect, NGrid, NFormItemGi, NDynamicInput, NTransfer, NButton, NDatePicker, NInputNumber, useLoadingBar, useMessage } from 'naive-ui';
 import { useRouter } from 'vue-router';
 import GetAPI from '../getApi';
+import { Value } from 'naive-ui/es/date-picker/src/interface';
 
 type option = {
     label: string,
@@ -34,8 +35,8 @@ let formValue = reactive({
     sort: ref([] as string[]),
     queryPreset: ref([] as string[]),
     sortPreset: ref([] as string[]),
-    range: ref(null as number[] | null),
-    // range: ref([Date.now() - 1 * 60 * 60 * 1000, Date.now()]),
+    // range: ref(null as number[] | null),
+    range: ref([Date.now() - 1 * 60 * 60 * 1000, Date.now()] as Value),
     limit: null as null | number,
 })
 
@@ -53,29 +54,9 @@ let queryPresetOptions = [
         value: '{"level":"warn"}',
     },
     {
-        label: 'Error',
-        value: '{"level":"error"}',
-    },
-    {
         label: 'Error Only',
         value: '{"level":"error"}',
-    },
-    {
-        label: 'Last 1 hour',
-        value: `{"ts":{"$gte":${(Date.now() - 1000 * 60 * 60).toString()}000000}}`,
-    },
-    {
-        label: 'Last 6 hours',
-        value: `{"ts":{"$gte":${(Date.now() - 1000 * 60 * 60 * 6).toString()}000000}}`,
-    },
-    {
-        label: 'Last 12 hours',
-        value: `{"ts":{"$gte":${(Date.now() - 1000 * 60 * 60 * 12).toString()}000000}}`,
-    },
-    {
-        label: 'Last 24 hours',
-        value: `{"ts":{"$gte":${(Date.now() - 1000 * 60 * 60 * 24).toString()}000000}}`,
-    },
+    }
 ]
 
 let sortPresetOptions = [
@@ -147,6 +128,34 @@ function handleInstance(value: string) {
     }
 }
 
+let rangeShortcuts = {
+    // 'Happy holiday': [1629216000000, 1631203200000] as const,
+    'Now': () => {
+        const cur = new Date().getTime() + new Date().getTimezoneOffset() * 60 * 1000
+        return [cur , cur] as const
+    },
+    'Last 1hr': () => {
+        const cur = new Date().getTime() + new Date().getTimezoneOffset() * 60 * 1000
+        return [cur - 60 * 60 * 1000 , cur ] as const
+    },
+    'Last 2hrs': () => {
+        const cur = new Date().getTime() + new Date().getTimezoneOffset() * 60 * 1000
+        return [cur - 2 * 60 * 60 * 1000 , cur ] as const
+    },
+    'Last 6hrs': () => {
+        const cur = new Date().getTime() + new Date().getTimezoneOffset() * 60 * 1000
+        return [cur - 6 * 60 * 60 * 1000 , cur ] as const
+    },
+    'Last 12hrs': () => {
+        const cur = new Date().getTime() + new Date().getTimezoneOffset() * 60 * 1000
+        return [cur - 12 * 60 * 60 * 1000 , cur ] as const
+    },
+    'Last 24hrs': () => {
+        const cur = new Date().getTime() + new Date().getTimezoneOffset() * 60 * 1000
+        return [cur - 24 * 60 * 60 * 1000 , cur ] as const
+    }
+}
+
 async function queryLogy(formValue: any) {
     disableQueryButton.value = true
     loadingBar.start()
@@ -175,8 +184,8 @@ async function queryLogy(formValue: any) {
         }
         if (formValue.range != null) {
             query['ts'] = {
-                '$gte': parseFloat(formValue.range[0].toString() +'000000'),
-                '$lte': parseFloat(formValue.range[1].toString() + '000000'),
+                '$gte': parseFloat((formValue.range[0] - new Date().getTimezoneOffset() * 60 * 1000).toString() +'000000'),
+                '$lte': parseFloat((formValue.range[1] - new Date().getTimezoneOffset() * 60 * 1000).toString() + '000000'),
             }
         }
         for (let k of formValue.sort) {
@@ -358,16 +367,15 @@ async function queryLogy(formValue: any) {
                     :max="10" />
             </n-form-item-gi>
             <n-form-item-gi span="12" label="Query Presets" path="queryPreset">
-                <n-transfer v-model:value="formValue.queryPreset" size="small" source-title=" " target-title=" "
+                <n-transfer ref="transfer" v-model:value="formValue.queryPreset" size="small"
                     :options="queryPresetOptions" />
             </n-form-item-gi>
             <n-form-item-gi span="12" label="Sort Presets" path="sortPreset">
-                <n-transfer v-model:value="formValue.sortPreset" size="small" source-title=" " target-title=" "
-                    :options="sortPresetOptions" />
+                <n-transfer ref="transfer" v-model:value="formValue.sortPreset" size="small" :options="sortPresetOptions" />
             </n-form-item-gi>
-            <n-form-item-gi span="12" label="Time Picker" path="timePicker">
+            <n-form-item-gi span="12" label="Time Picker" path="range">
                 <n-date-picker class="mt-3" size="small" clearable v-model:value="formValue.range" type="datetimerange"
-                    style="width: 100%" />
+                    style="width: 100%" :shortcuts="rangeShortcuts" />
             </n-form-item-gi>
             <n-form-item-gi span="12" label="Limit" path="limit">
                 <n-input-number v-model:value="formValue.limit" placeholder="500" />
@@ -376,6 +384,5 @@ async function queryLogy(formValue: any) {
         <n-button @click="queryLogy(formValue)" :disabled="disableQueryButton">
             QUERY
         </n-button>
-        {{ formValue.range }}
     </n-form>
 </template>

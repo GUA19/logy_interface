@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { NDataTable } from 'naive-ui';
 
 const columns: Array<any> = [
   { title: 'Collection Name', key: 'coll_name', width: 286 },

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-
+import { NDataTable } from 'naive-ui';
 const columns: Array<any> = [
   { title: 'Collection', key: 'collection', width: 286 },
   { title: 'Level', key: 'level', width: 58 },
@@ -29,7 +29,6 @@ defineProps<Props>()
 
 <template>
   <div class="swirl">
-    <br>
     <n-data-table striped :columns="columns" :data="swirlData" :pagination="pagination" :style="{ 'height': '1226px' }"
       flex-height />
   </div>
