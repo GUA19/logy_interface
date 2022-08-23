@@ -21,7 +21,7 @@ const pagination = {
 }
 
 type Props = {
-  rpdData: [],
+  tidalData: [],
 }
 
 defineProps<Props>()
@@ -29,7 +29,7 @@ defineProps<Props>()
 
 <template>
   <div class="ruapd">
-    <n-data-table striped :columns="columns" :data="rpdData" :pagination="pagination" :style="{ 'height': '1226px' }"
+    <n-data-table striped :columns="columns" :data="tidalData" :pagination="pagination" :style="{ 'height': '1226px' }"
       flex-height />
   </div>
 </template>

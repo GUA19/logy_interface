@@ -300,7 +300,7 @@ async function queryLogy(formValue: any) {
                         logydata.push(dic)
                     }
                     break;
-                case 'rpd':
+                case 'tidal':
                     for (let i of res) {
                         let dic = {} as any
                         dic.collection = n

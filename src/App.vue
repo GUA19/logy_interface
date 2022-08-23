@@ -22,7 +22,7 @@ let applicationOptions: Array<option> = reactive([]);
 
 // data table
 let recordsData: Array<any> = reactive([])
-let rpdData: Array<any> = reactive([])
+let tidalData: Array<any> = reactive([])
 let swirlData: Array<any> = reactive([])
 
 function redirect() {
@@ -98,9 +98,9 @@ function handleQueryEvent(data: any) {
 			swirlData.length = 0
 			swirlData.push(...data.data)
 			break;
-		case 'rpd':
-			rpdData.length = 0
-			rpdData.push(...data.data)
+		case 'tidal':
+			tidalData.length = 0
+			tidalData.push(...data.data)
 			break;
 		default:
 			break;
@@ -156,7 +156,7 @@ onBeforeMount(async () => {
 				</n-message-provider>
 			</n-loading-bar-provider>
 			<br>
-			<router-view :recordsData="recordsData" :rpdData="rpdData" :swirlData="swirlData"></router-view>
+			<router-view :recordsData="recordsData" :tidalData="tidalData" :swirlData="swirlData"></router-view>
 		</n-card>
 	</n-config-provider>
 </template>
