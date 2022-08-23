@@ -6,6 +6,8 @@ import { LightModeOutlined, DarkModeOutlined } from '@vicons/material';
 import GetAPI from './getApi';
 import QueryForm from './components/Queryform.vue';
 
+type StringToDict = { [key: string]: any }
+
 type option = {
 	label: string,
 	value: string,
@@ -22,8 +24,8 @@ let applicationOptions: Array<option> = reactive([]);
 
 // data table
 let recordsData: Array<any> = reactive([])
-let tidalData: Array<any> = reactive([])
-let swirlData: Array<any> = reactive([])
+let regularData: StringToDict = reactive({})
+let selectedApplication = ref('records')
 
 function redirect() {
 	window.location.href = 'https://wavefront.codehard.xyz';
@@ -94,17 +96,17 @@ function handleQueryEvent(data: any) {
 			recordsData.length = 0
 			recordsData.push(...data.data)
 			break;
-		case 'swirl':
-			swirlData.length = 0
-			swirlData.push(...data.data)
-			break;
-		case 'tidal':
-			tidalData.length = 0
-			tidalData.push(...data.data)
-			break;
 		default:
+			if (!(data.application in regularData)) {
+				regularData[data.application] = []
+			}
+			regularData[data.application].push(...data.data)
 			break;
 	}
+}
+
+function handleChangeApplication(data: any) {
+	selectedApplication.value = data.application
 }
 
 onBeforeMount(async () => {
@@ -152,11 +154,13 @@ onBeforeMount(async () => {
 			</n-page-header>
 			<n-loading-bar-provider>
 				<n-message-provider>
-					<QueryForm @query="handleQueryEvent" :options=options :applicationOptions=applicationOptions />
+					<QueryForm @query="handleQueryEvent" @changeApplication="handleChangeApplication" :options=options
+						:applicationOptions=applicationOptions />
 				</n-message-provider>
 			</n-loading-bar-provider>
 			<br>
-			<router-view :recordsData="recordsData" :tidalData="tidalData" :swirlData="swirlData"></router-view>
+			<router-view :recordsData="recordsData" :regularData="regularData" :application="selectedApplication">
+			</router-view>
 		</n-card>
 	</n-config-provider>
 </template>

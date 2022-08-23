@@ -1,12 +1,10 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import Records from '../views/records.vue';
-import Swirl from '../views/swirl.vue';
-import Tidal from '../views/tidal.vue';
+import Regular from '../views/regular.vue';
 
 const routes: Array<RouteRecordRaw> = [
   { path: '/', name: 'records', component: Records },
-  { path: '/swirl', name: 'swirl', component: Swirl },
-  { path: '/tidal', name: 'tidal', component: Tidal },
+  { path: '/regular', name: 'regular', component: Regular },
 ];
 
 const router = createRouter({

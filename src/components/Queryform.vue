@@ -16,7 +16,7 @@ type props = {
 }
 
 let data = defineProps<props>()
-const emit = defineEmits(['query']);
+const emit = defineEmits(['query', 'changeApplication']);
 
 const loadingBar = useLoadingBar()
 const message = useMessage()
@@ -80,12 +80,19 @@ let logydata: Array<any> = reactive([])
 
 function handleApplication(value: string) {
     if (value != null) {
-        router.push({
-            name: value,
-        });
         componentOptions.length = 0;
-        if (value != 'records') {
+        if (value == 'records') {
+            router.push({
+                name: value,
+            });
+        } else {
+            router.push({
+                name: 'regular',
+            });
             componentOptions.push(...data.options[value]['option'])
+            emit('changeApplication', {
+                application: value,
+            })
         }
     } else {
         componentOptions.length = 0
