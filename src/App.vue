@@ -97,9 +97,7 @@ function handleQueryEvent(data: any) {
 			recordsData.push(...data.data)
 			break;
 		default:
-			if (!(data.application in regularData)) {
-				regularData[data.application] = []
-			}
+			regularData[data.application] = []
 			regularData[data.application].push(...data.data)
 			break;
 	}

@@ -36,7 +36,8 @@ let formValue = reactive({
     queryPreset: ref([] as string[]),
     sortPreset: ref([] as string[]),
     // range: ref(null as number[] | null),
-    range: ref([Date.now() - 1 * 60 * 60 * 1000, Date.now()] as Value),
+    // [Date.now() - 1 * 60 * 60 * 1000, Date.now()]
+    range: ref(null as Value | null),
     limit: null as null | number,
 })
 
