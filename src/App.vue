@@ -6,7 +6,7 @@ import { LightModeOutlined, DarkModeOutlined } from '@vicons/material';
 import GetAPI from './getApi';
 import QueryForm from './components/Queryform.vue';
 import { useAuth0 } from '@auth0/auth0-vue';
-const { getAccessTokenSilently } = useAuth0();
+const { loginWithRedirect, logout, getAccessTokenSilently, user, isAuthenticated } = useAuth0();
 
 type StringToDict = { [key: string]: any }
 
@@ -109,6 +109,14 @@ function handleChangeApplication(data: any) {
 	selectedApplication.value = data.application
 }
 
+function Login() {
+	loginWithRedirect();
+}
+
+function Logout() {
+	logout({ returnTo: window.location.origin });
+}
+
 onBeforeMount(async () => {
 	try {
 		const token = await getAccessTokenSilently();
@@ -147,9 +155,12 @@ onBeforeMount(async () => {
 							</template>
 						</n-switch>
 						<n-divider vertical />
-						<n-button @click="redirect()" size="small">
-							Return
+						<n-button size="small" v-if="isAuthenticated" @click="Logout">Log out {{
+							typeof user.nickname == "string" ? (user.nickname.length > 9 ? user.nickname.slice(0, 5) + "..." +
+							user.nickname?.slice(-4) : user.nickname.slice(0, 1).toUpperCase() + user.nickname.slice(1)) : ""
+							}}
 						</n-button>
+						<n-button size="small" v-else @click="Login">Log in</n-button>
 					</n-space>
 				</template>
 			</n-page-header>
