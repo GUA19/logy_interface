@@ -3,9 +3,13 @@ import axios from "axios";
 const url = 'https://logy.codehard.xyz/api/';
 
 class GetAPI {
-    static async getAllCollectionNames(): Promise<Array<any>> {
+    static async getAllCollectionNames(token: string): Promise<Array<any>> {
         return new Promise((resolve, reject) => {
-            axios.get(url + 'list')
+            axios.get(url + 'list', {
+                headers: {
+                    Authorization: 'Bearer ' + token
+                }
+            })
             .then((res) => {
                 let data = res.data;
                 resolve(
@@ -18,7 +22,7 @@ class GetAPI {
         });
     }
 
-    static async getCollection(name: string, level: string, limit: number, start: number, end: number) :Promise<Array<any>> {
+    static async getCollection(token: string, name: string, level: string, limit: number, start: number, end: number) :Promise<Array<any>> {
         return new Promise(
             (resolve, reject) => {
                 axios.get(url + 'collections', {
@@ -28,6 +32,9 @@ class GetAPI {
                         limit: limit.toString(),
                         start: start.toString(),
                         end: end.toString(),
+                    },
+                    headers: {
+                        Authorization: 'Bearer ' + token
                     }
                 })
                 .then((res) => {
@@ -43,7 +50,7 @@ class GetAPI {
         );
     }
 
-    static async getLogs(name: string, query: string, sort: string, limit: number) :Promise<Array<any>> {
+    static async getLogs(token: string, name: string, query: string, sort: string, limit: number) :Promise<Array<any>> {
         return new Promise(
             (resolve, reject) => {
                 axios.get(url + 'logs', {
@@ -52,6 +59,9 @@ class GetAPI {
                         query: query,
                         sort: sort,
                         limit: limit.toString(),
+                    },
+                    headers: {
+                        Authorization: 'Bearer ' + token
                     }
                 })
                     .then((res) => {

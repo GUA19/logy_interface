@@ -5,6 +5,8 @@ import { useRouter } from 'vue-router';
 import { LightModeOutlined, DarkModeOutlined } from '@vicons/material';
 import GetAPI from './getApi';
 import QueryForm from './components/Queryform.vue';
+import { useAuth0 } from '@auth0/auth0-vue';
+const { getAccessTokenSilently } = useAuth0();
 
 type StringToDict = { [key: string]: any }
 
@@ -109,7 +111,8 @@ function handleChangeApplication(data: any) {
 
 onBeforeMount(async () => {
 	try {
-		let res: Array<string> = await GetAPI.getAllCollectionNames()
+		const token = await getAccessTokenSilently();
+		let res: Array<string> = await GetAPI.getAllCollectionNames(token)
 		console.log(res)
 		getOptionsDict(res)
 	} catch (error) {

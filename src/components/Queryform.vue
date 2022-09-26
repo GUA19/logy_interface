@@ -4,6 +4,8 @@ import { NForm, NFormItem, NSelect, NGrid, NFormItemGi, NDynamicInput, NTransfer
 import { useRouter } from 'vue-router';
 import GetAPI from '../getApi';
 import { Value } from 'naive-ui/es/date-picker/src/interface';
+import { useAuth0 } from '@auth0/auth0-vue';
+const { getAccessTokenSilently } = useAuth0();
 
 type option = {
     label: string,
@@ -273,7 +275,8 @@ async function queryLogy(formValue: any) {
     for (let n of name) {
         try {
             // let res: any[] = []
-            let res = await GetAPI.getLogs(n, JSON.stringify(query), JSON.stringify(sort), limit)
+            const token = await getAccessTokenSilently();
+            let res = await GetAPI.getLogs(token, n, JSON.stringify(query), JSON.stringify(sort), limit)
             // console.log(res)
             if (res == null) {
                 console.log('No document found match the query data!', n)
